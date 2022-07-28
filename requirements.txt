@@ -1,5 +1,6 @@
 numpy==1.23.1
 pandas==1.4.3
+peewee==3.15.1
 python-dateutil==2.8.2
 python-dotenv==0.20.0
 python-http-client==3.3.7
