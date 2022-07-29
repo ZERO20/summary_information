@@ -52,7 +52,7 @@ def read_csv() -> pd.DataFrame:
         pd.DataFrame: csv information with the headers: number, date, ammount
     """
     logger.info('Reading csv file...')
-    if FILE_DIRECTORY == 's3':
+    if FILE_DIRECTORY == 'S3':
         logger.info(f'Getting the csv from S3: {S3_BUCKET_NAME}/{S3_KEY}')
         s3 = boto3.client(
             's3',
