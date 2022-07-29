@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: summary_information_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    restart: always
+
+  app:
+    build: .
+    container_name: summary_information_app
+    depends_on:
+      - db
+    volumes:
+      - .:/code
+
+volumes:
+  pgdata:
+    driver: local
