@@ -171,12 +171,15 @@ def get_account() -> Account:
     return account
 
 
-def lambda_handler(event=None, context=None):
+def lambda_handler(event=None, context=None) -> dict:
     account = get_account()
     df = read_csv()
     summary_information = get_summary_information(account, df)
     save_db(account, df)
     send_mail(summary_information)
+    return {
+        "message": "Processed information"
+    }
 
 
 if __name__ == '__main__':
