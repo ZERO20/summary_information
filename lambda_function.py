@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #   Summary Information                                                       #
-#   Lambda to send a summary information                                      #
+#   Lambda to send summary information                                      #
 ###############################################################################
 
 import logging
 import os
+from io import BytesIO
+
+import boto3
 from dotenv import load_dotenv
 import pandas as pd
 from sendgrid import SendGridAPIClient
@@ -28,8 +31,18 @@ logger.setLevel(logging.DEBUG)
 # SENDGRID
 SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY', '')
 SENDGRID_SUMMARY_TEMPLATE_ID = os.getenv('SENDGRID_SUMMARY_TEMPLATE_ID', '')
+
+# AWS - S3
+S3_ACCESS_KEY_ID = os.getenv('S3_ACCESS_KEY_ID', '')
+S3_SECRET_ACCESS_KEY = os.getenv('S3_SECRET_ACCESS_KEY', '')
+S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME', '')
+S3_REGION = os.getenv('S3_REGION', '')
+S3_KEY = os.getenv('S3_KEY', '')
+
+# PROJECT
 FROM_EMAIL = os.getenv('FROM_EMAIL', '')
 TO_EMAIL = os.getenv('TO_EMAIL', '')
+FILE_DIRECTORY = os.getenv('FILE_DIRECTORY', '')
 
 
 def read_csv() -> pd.DataFrame:
@@ -39,7 +52,21 @@ def read_csv() -> pd.DataFrame:
         pd.DataFrame: csv information with the headers: number, date, ammount
     """
     logger.info('Reading csv file...')
-    df = pd.read_csv('summaries_information/summary_information.csv', delimiter=',', skip_blank_lines=True)
+    if FILE_DIRECTORY == 's3':
+        logger.info(f'Getting the csv from S3: {S3_BUCKET_NAME}/{S3_KEY}')
+        s3 = boto3.client(
+            's3',
+            region_name=S3_REGION,
+            aws_access_key_id=S3_ACCESS_KEY_ID,
+            aws_secret_access_key=S3_SECRET_ACCESS_KEY
+        )
+        obj = s3.get_object(Bucket=S3_BUCKET_NAME, Key=S3_KEY)
+        _csv = (BytesIO(obj['Body'].read()))
+    else:
+        logger.info('Getting the csv locally')
+        _csv = 'summaries_information/summary_information.csv'
+
+    df = pd.read_csv(_csv, delimiter=',', skip_blank_lines=True, encoding='utf8')
     df.rename(columns={"Id": "number", "Date": "date", "Transaction": "amount"}, inplace=True)
     return df
 
