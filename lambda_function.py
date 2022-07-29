@@ -154,3 +154,11 @@ def lambda_handler(event=None, context=None):
 
 if __name__ == '__main__':
     lambda_handler()
+
+
+"""
+- agregar make para probar lambda
+- usar una variable para buscar el archivo en un s3 o en local
+- levantar docker y otro para python
+- el run debe ejecutar el código
+"""
