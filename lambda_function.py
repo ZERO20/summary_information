@@ -28,8 +28,8 @@ logger.setLevel(logging.DEBUG)
 # SENDGRID
 SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY', '')
 SENDGRID_SUMMARY_TEMPLATE_ID = os.getenv('SENDGRID_SUMMARY_TEMPLATE_ID', '')
-SENDGRID_FROM_EMAIL = os.getenv('SENDGRID_FROM_EMAIL', '')
-SENDGRID_TO_EMAIL = os.getenv('SENDGRID_TO_EMAIL', '')
+FROM_EMAIL = os.getenv('FROM_EMAIL', '')
+TO_EMAIL = os.getenv('TO_EMAIL', '')
 
 
 def read_csv() -> pd.DataFrame:
@@ -113,8 +113,8 @@ def send_mail(summary_information: dict) -> bool:
     """
     logger.info('Sending email...')
     message = Mail(
-        from_email=SENDGRID_FROM_EMAIL,
-        to_emails=SENDGRID_TO_EMAIL
+        from_email=FROM_EMAIL,
+        to_emails=TO_EMAIL
     )
     message.dynamic_template_data = summary_information
     message.template_id = SENDGRID_SUMMARY_TEMPLATE_ID
@@ -132,13 +132,13 @@ def send_mail(summary_information: dict) -> bool:
 
 def get_account() -> Account:
     """
-    Gets or creates an account with the email assigned to the environment variable SENDGRID_TO_EMAIL
+    Gets or creates an account with the email assigned to the environment variable TO_EMAIL
     Returns:
         Account: Account to use.
     """
     logger.info('Getting the account...')
     account, created = Account.get_or_create(
-        email=SENDGRID_TO_EMAIL,
+        email=TO_EMAIL,
         defaults={'name': 'Edgar', 'paternal_surname': 'de la Cruz', 'maternal_surname': 'Vasconcelos'}
     )
     return account
@@ -154,11 +154,3 @@ def lambda_handler(event=None, context=None):
 
 if __name__ == '__main__':
     lambda_handler()
-
-
-"""
-- agregar make para probar lambda
-- usar una variable para buscar el archivo en un s3 o en local
-- levantar docker y otro para python
-- el run debe ejecutar el código
-"""
