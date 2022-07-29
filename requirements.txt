@@ -1,3 +1,6 @@
+boto3==1.24.40
+botocore==1.27.40
+jmespath==1.0.1
 numpy==1.23.1
 pandas==1.4.3
 peewee==3.15.1
@@ -6,6 +9,8 @@ python-dateutil==2.8.2
 python-dotenv==0.20.0
 python-http-client==3.3.7
 pytz==2022.1
+s3transfer==0.6.0
 sendgrid==6.9.7
 six==1.16.0
 starkbank-ecdsa==2.0.3
+urllib3==1.26.11
