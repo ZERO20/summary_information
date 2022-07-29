@@ -23,9 +23,9 @@ run-script:
 	docker-compose -f docker-compose.yml exec app bash -c "python lambda_function.py"
 
 create-zip:
-	cd venv/lib/python3.9/site-packages \
+	docker-compose -f docker-compose.yml exec app bash -c "cd /usr/local/lib/python3.9/site-packages \
 	&& zip -r ${OLDPWD}/function.zip . \
 	&& cd ${OLDPWD} \
 	&& zip -g function.zip lambda_function.py \
 	summaries_information/* \
-	db/*
+	db/*"
